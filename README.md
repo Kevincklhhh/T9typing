@@ -1,1 +1,2 @@
 # T9typing
+The Tiny Typing Competition for EECS598 is a challenge designed to innovate text entry methods for smartwatches. Participants are tasked with developing a fast and intuitive text entry system for a simulated smartwatch interface, emphasizing speed, accuracy, and user-friendliness. The project focuses on creating a text entry method that works within the constraints of a 1-inch by 1-inch touch area.
