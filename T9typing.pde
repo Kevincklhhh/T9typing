@@ -21,8 +21,10 @@ final float sizeOfInputArea = DPIofYourDeviceScreen*1; //aka, 1.0 inches square!
 final int displayTextChars = 20;
 final int entryHeight = 50;
 final int subButtonHeight = 100;
+final int buttonSpacing = 6;
 final int buttonWidth = (int)sizeOfInputArea / 3;
-final int buttonHeight = ((int)sizeOfInputArea - entryHeight) / 3;
+final int buttonHeight = ((int)sizeOfInputArea - entryHeight) / 3+3;
+
 
 String[] sections = {"space-delete", "abc", "def", "ghi", "jkl", "mnop", "qrs", "tuv", "wxyz"};
 
@@ -124,6 +126,36 @@ void draw()
     //draw very basic next button
     fill(255, 0, 0);
     rect(width-200, height-200, 200, 200); //draw next button
+    
+    //Debugging button areas
+    /*rect(width/2-sizeOfInputArea/2-buttonSpacing, height/2-sizeOfInputArea/2+entryHeight, buttonWidth, buttonHeight);
+    rect(width/2-sizeOfInputArea/2 + buttonWidth, height/2-sizeOfInputArea/2+entryHeight, buttonWidth, buttonHeight);
+    rect(width/2-sizeOfInputArea/2+buttonSpacing + buttonWidth*2, height/2-sizeOfInputArea/2+entryHeight, buttonWidth, buttonHeight);
+    
+    
+    rect(width/2-sizeOfInputArea/2-buttonSpacing, height/2-sizeOfInputArea/2+entryHeight+buttonHeight, buttonWidth, buttonHeight);
+    rect(width/2-sizeOfInputArea/2 + buttonWidth, height/2-sizeOfInputArea/2+entryHeight+buttonHeight, buttonWidth, buttonHeight);
+    rect(width/2-sizeOfInputArea/2+buttonSpacing + buttonWidth*2, height/2-sizeOfInputArea/2+entryHeight+buttonHeight, buttonWidth, buttonHeight);
+    
+    rect(width/2-sizeOfInputArea/2-buttonSpacing, height/2-sizeOfInputArea/2+entryHeight+buttonHeight*2, buttonWidth, buttonHeight);
+    rect(width/2-sizeOfInputArea/2 + buttonWidth, height/2-sizeOfInputArea/2+entryHeight+buttonHeight*2, buttonWidth, buttonHeight);
+    rect(width/2-sizeOfInputArea/2+buttonSpacing + buttonWidth*2, height/2-sizeOfInputArea/2+entryHeight+buttonHeight*2, buttonWidth, buttonHeight);  */
+    
+    
+    /*rect(width/2-sizeOfInputArea/2, height/2-sizeOfInputArea/2+entryHeight, buttonWidth, buttonHeight);
+    rect(width/2-sizeOfInputArea/2 + buttonWidth, height/2-sizeOfInputArea/2+entryHeight, buttonWidth, buttonHeight);
+    rect(width/2-sizeOfInputArea/2 + buttonWidth*2, height/2-sizeOfInputArea/2+entryHeight, buttonWidth, buttonHeight);
+    
+    
+    rect(width/2-sizeOfInputArea/2, height/2-sizeOfInputArea/2+entryHeight+buttonHeight, buttonWidth, buttonHeight);
+    rect(width/2-sizeOfInputArea/2 + buttonWidth, height/2-sizeOfInputArea/2+entryHeight+buttonHeight, buttonWidth, buttonHeight);
+    rect(width/2-sizeOfInputArea/2 + buttonWidth*2, height/2-sizeOfInputArea/2+entryHeight+buttonHeight, buttonWidth, buttonHeight);
+    
+    rect(width/2-sizeOfInputArea/2, height/2-sizeOfInputArea/2+entryHeight+buttonHeight*2, buttonWidth, buttonHeight);
+    rect(width/2-sizeOfInputArea/2 + buttonWidth, height/2-sizeOfInputArea/2+entryHeight+buttonHeight*2, buttonWidth, buttonHeight);
+    rect(width/2-sizeOfInputArea/2 + buttonWidth*2, height/2-sizeOfInputArea/2+entryHeight+buttonHeight*2, buttonWidth, buttonHeight); */
+    
+    
     fill(255);
     text("NEXT > ", width-150, height-150); //draw next label
 
@@ -195,7 +227,8 @@ void mousePressed()
   } */
   
   
-  if (didMouseClick(width/2-sizeOfInputArea/2, height/2-sizeOfInputArea/2+entryHeight, buttonWidth, buttonHeight))
+  
+  if (didMouseClick(width/2-sizeOfInputArea/2 - buttonSpacing, height/2-sizeOfInputArea/2+entryHeight, buttonWidth, buttonHeight))
   {
    //System.out.println(mouseX + " " + mouseY);
    //System.out.println("CLICKED 1!"); 
@@ -208,14 +241,14 @@ void mousePressed()
    //System.out.println("CLICKED 2!"); 
    buttonState = 2;
   }
-  if (didMouseClick(width/2-sizeOfInputArea/2 + buttonWidth*2, height/2-sizeOfInputArea/2+entryHeight, buttonWidth, buttonHeight))
+  if (didMouseClick(width/2-sizeOfInputArea/ + buttonWidth*2 + buttonSpacing, height/2-sizeOfInputArea/2+entryHeight, buttonWidth, buttonHeight))
   {
    //System.out.println(mouseX + " " + mouseY);
    //System.out.println("CLICKED 3!"); 
    buttonState = 3; 
   }
   
-  if (didMouseClick(width/2-sizeOfInputArea/2, height/2-sizeOfInputArea/2+entryHeight+buttonHeight, buttonWidth, buttonHeight))
+  if (didMouseClick(width/2-sizeOfInputArea/2 - buttonSpacing, height/2-sizeOfInputArea/2+entryHeight+buttonHeight, buttonWidth, buttonHeight))
   {
    //System.out.println(mouseX + " " + mouseY);
    //System.out.println("CLICKED 4!"); 
@@ -228,14 +261,14 @@ void mousePressed()
    //System.out.println("CLICKED 5!"); 
    buttonState = 5; 
   }
-  if (didMouseClick(width/2-sizeOfInputArea/2+buttonWidth*2, height/2-sizeOfInputArea/2+entryHeight+buttonHeight, buttonWidth, buttonHeight))
+  if (didMouseClick(width/2-sizeOfInputArea/2+buttonWidth*2 + buttonSpacing, height/2-sizeOfInputArea/2+entryHeight+buttonHeight, buttonWidth, buttonHeight))
   {
    //System.out.println(mouseX + " " + mouseY);
    //System.out.println("CLICKED 6!"); 
    buttonState = 6; 
   }
   
-  if (didMouseClick(width/2-sizeOfInputArea/2, height/2-sizeOfInputArea/2+entryHeight+buttonHeight*2, buttonWidth, buttonHeight))
+  if (didMouseClick(width/2-sizeOfInputArea/2 - buttonSpacing, height/2-sizeOfInputArea/2+entryHeight+buttonHeight*2, buttonWidth, buttonHeight))
   {
    //System.out.println(mouseX + " " + mouseY);
    //System.out.println("CLICKED 7!"); 
@@ -248,12 +281,12 @@ void mousePressed()
    //System.out.println("CLICKED 8!"); 
    buttonState = 8;
   }
-  if (didMouseClick(width/2-sizeOfInputArea/2+buttonWidth*2, height/2-sizeOfInputArea/2+entryHeight+buttonHeight*2, buttonWidth, buttonHeight))
+  if (didMouseClick(width/2-sizeOfInputArea/2+buttonWidth*2 + buttonSpacing, height/2-sizeOfInputArea/2+entryHeight+buttonHeight*2, buttonWidth, buttonHeight))
   {
    //System.out.println(mouseX + " " + mouseY);
    //System.out.println("CLICKED 9!"); 
    buttonState = 9; 
-  }
+  } 
   
   
 
