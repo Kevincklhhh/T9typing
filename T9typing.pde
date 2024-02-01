@@ -15,9 +15,25 @@ String currentPhrase = ""; //the current target phrase
 String currentTyped = ""; //what the user has typed so far
 final int DPIofYourDeviceScreen = 295; //500 for debugging 295 for LG K31 you will need to look up the DPI or PPI of your device to make sure you get the right scale. Or play around with this value.
 final float sizeOfInputArea = DPIofYourDeviceScreen*1; //aka, 1.0 inches square!
+
+// MAY NEED TO TWEAK THESE
+
+final int displayTextChars = 20;
+final int entryHeight = 50;
+final int subButtonHeight = 100;
+final int buttonWidth = (int)sizeOfInputArea / 3;
+final int buttonHeight = ((int)sizeOfInputArea - entryHeight) / 3;
+
+String[] sections = {"space-delete", "abc", "def", "ghi", "jkl", "mnop", "qrs", "tuv", "wxyz"};
+
+int buttonState = 0;
+
 PImage watch;
 PImage T9keypad;
 PImage finger;
+
+PImage subKeypad;
+
 PFont font;
 
 //Variables for my silly implementation. You can delete this:
@@ -35,8 +51,9 @@ void setup()
   //Collections.shuffle(Arrays.asList(phrases), new Random(100)); //randomize the order of the phrases with seed 100; same order every time, useful for testing
 
   orientation(PORTRAIT); //can also be PORTRAIT - sets orientation on android device
-  //size(1920, 1080); //Sets the size of the app. You should modify this to your device's native size. Many phones today are 1080 wide by 1920 tall.
-  fullScreen(); //Alternatively, set the size to fullscreen.
+  size(1520, 720); //Sets the size of the app. You should modify this to your device's native size. Many phones today are 1080 wide by 1920 tall.
+  //fullScreen(); //Alternatively, set the size to fullscreen.
+  int displayDensity = 1;
   font = createFont("NotoSans-Regular.ttf", 14 * displayDensity);
   textFont(font); //set the font to Noto Sans 14 pt. Creating fonts is expensive, so make difference sizes once in setup, not draw
   noStroke(); //my code doesn't use any strokes
@@ -45,6 +62,7 @@ void setup()
 //You can modify anything in here. This is just a basic implementation.
 void draw()
 {
+  //System.out.println(mouseX + " " + mouseY);
   background(255); //clear background
 
   //check to see if the user finished. You can't change the score computation.
@@ -69,6 +87,11 @@ void draw()
 
   drawWatch(); //draw watch background
   drawKeypad();
+  if (buttonState != 0)
+  {
+    drawSubKeypad(sections[buttonState - 1] + ".png");
+  }
+  
   //fill(100);
   // Note: width and height are variables defined by the Processing library. For
   // more information, please refer to Processing's reference.
@@ -112,11 +135,22 @@ void draw()
     //The entered text should be put inside the 1"x1" square. You can specify a
     //smaller text size here. 1pt is 1/72 inch, so the following formula
     //converts point size to pixel size.
-    fill(200);
+    fill(0);
     textFont(font, (6 * DPIofYourDeviceScreen) / 72);
-    text("Entered: " + currentTyped +"|", width/2-sizeOfInputArea/2, height/2-sizeOfInputArea/2, sizeOfInputArea, sizeOfInputArea/4); //draw what the user has entered thus far 
+    
+    
+    
+    if (currentTyped.length() <= displayTextChars)
+    {
+      text(currentTyped +"|", width/2-sizeOfInputArea/2, height/2-sizeOfInputArea/2, sizeOfInputArea, sizeOfInputArea/4); //draw what the user has entered thus far 
+    }
+    else
+    {
+      text(currentTyped.substring(currentTyped.length()-20) + "|", width/2-sizeOfInputArea/2, height/2-sizeOfInputArea/2, sizeOfInputArea, sizeOfInputArea/4); //draw last 20 characters
+    }
+    
     textAlign(CENTER);
-    text("" + currentLetter, width/2, height/2-sizeOfInputArea/4); //draw current letter
+    //text("" + currentLetter, width/2, height/2-sizeOfInputArea/4); //draw current letter
     textFont(font); //Reset font size
   }
 
@@ -136,7 +170,7 @@ boolean didMouseClick(float x, float y, float w, float h) //simple function to d
 //draw() function.
 void mousePressed()
 {
-  if (didMouseClick(width/2-sizeOfInputArea/2, height/2-sizeOfInputArea/2+sizeOfInputArea/2, sizeOfInputArea/2, sizeOfInputArea/2)) //check if click in left button
+  /*if (didMouseClick(width/2-sizeOfInputArea/2, height/2-sizeOfInputArea/2+sizeOfInputArea/2, sizeOfInputArea/2, sizeOfInputArea/2)) //check if click in left button
   {
     currentLetter --;
     if (currentLetter<'_') //wrap around to z
@@ -158,13 +192,158 @@ void mousePressed()
       currentTyped = currentTyped.substring(0, currentTyped.length()-1);
     else if (currentLetter!='`') //if not any of the above cases, add the current letter to the typed string
       currentTyped+=currentLetter;
+  } */
+  
+  
+  if (didMouseClick(width/2-sizeOfInputArea/2, height/2-sizeOfInputArea/2+entryHeight, buttonWidth, buttonHeight))
+  {
+   //System.out.println(mouseX + " " + mouseY);
+   //System.out.println("CLICKED 1!"); 
+   
+   buttonState = 1;
   }
+  if (didMouseClick(width/2-sizeOfInputArea/2 + buttonWidth, height/2-sizeOfInputArea/2+entryHeight, buttonWidth, buttonHeight))
+  {
+   //System.out.println(mouseX + " " + mouseY);
+   //System.out.println("CLICKED 2!"); 
+   buttonState = 2;
+  }
+  if (didMouseClick(width/2-sizeOfInputArea/2 + buttonWidth*2, height/2-sizeOfInputArea/2+entryHeight, buttonWidth, buttonHeight))
+  {
+   //System.out.println(mouseX + " " + mouseY);
+   //System.out.println("CLICKED 3!"); 
+   buttonState = 3; 
+  }
+  
+  if (didMouseClick(width/2-sizeOfInputArea/2, height/2-sizeOfInputArea/2+entryHeight+buttonHeight, buttonWidth, buttonHeight))
+  {
+   //System.out.println(mouseX + " " + mouseY);
+   //System.out.println("CLICKED 4!"); 
+   buttonState = 4; 
+  }
+  
+  if (didMouseClick(width/2-sizeOfInputArea/2+buttonWidth, height/2-sizeOfInputArea/2+entryHeight+buttonHeight, buttonWidth, buttonHeight))
+  {
+   //System.out.println(mouseX + " " + mouseY);
+   //System.out.println("CLICKED 5!"); 
+   buttonState = 5; 
+  }
+  if (didMouseClick(width/2-sizeOfInputArea/2+buttonWidth*2, height/2-sizeOfInputArea/2+entryHeight+buttonHeight, buttonWidth, buttonHeight))
+  {
+   //System.out.println(mouseX + " " + mouseY);
+   //System.out.println("CLICKED 6!"); 
+   buttonState = 6; 
+  }
+  
+  if (didMouseClick(width/2-sizeOfInputArea/2, height/2-sizeOfInputArea/2+entryHeight+buttonHeight*2, buttonWidth, buttonHeight))
+  {
+   //System.out.println(mouseX + " " + mouseY);
+   //System.out.println("CLICKED 7!"); 
+   buttonState = 7; 
+  }
+  
+  if (didMouseClick(width/2-sizeOfInputArea/2+buttonWidth, height/2-sizeOfInputArea/2+entryHeight+buttonHeight*2, buttonWidth, buttonHeight))
+  {
+   //System.out.println(mouseX + " " + mouseY);
+   //System.out.println("CLICKED 8!"); 
+   buttonState = 8;
+  }
+  if (didMouseClick(width/2-sizeOfInputArea/2+buttonWidth*2, height/2-sizeOfInputArea/2+entryHeight+buttonHeight*2, buttonWidth, buttonHeight))
+  {
+   //System.out.println(mouseX + " " + mouseY);
+   //System.out.println("CLICKED 9!"); 
+   buttonState = 9; 
+  }
+  
+  
 
   //You are allowed to have a next button outside the 1" area
   if (didMouseClick(width-200, height-200, 200, 200)) //check if click is in next button
   {
     nextTrial(); //if so, advance to next trial
   }
+}
+
+void mouseReleased() {
+  if (buttonState != 0)
+  {
+    String group = sections[buttonState - 1];
+    
+    if (mouseX >= (width/2 - sizeOfInputArea/2) && mouseX <= (width/2 + sizeOfInputArea/2) && mouseY >= (height/2 - subButtonHeight/2) && mouseY <= (height/2 + subButtonHeight/2))
+    {
+      //System.out.println("A KEY HAS BEEN PRESSED!");
+      if (group.length() == 3) 
+      {
+        if (mouseX <= (width/2-sizeOfInputArea/2) + sizeOfInputArea/3)
+        {
+          System.out.println("1");
+          currentTyped += group.charAt(0);
+        }
+        else if (mouseX <= (width/2-sizeOfInputArea/2) + (sizeOfInputArea/3)*2)
+        {
+          System.out.println("2");
+          currentTyped += group.charAt(1);
+        }
+        else
+        {
+          System.out.println("3");
+          currentTyped += group.charAt(2);
+        }
+      } 
+      else if (group.length() == 4)
+      {
+        if (mouseX <= (width/2-sizeOfInputArea/2) + sizeOfInputArea/4)
+        {
+          System.out.println("1");
+          currentTyped += group.charAt(0);
+        }
+        else if (mouseX <= (width/2-sizeOfInputArea/2) + (sizeOfInputArea/4)*2)
+        {
+          System.out.println("2");
+          currentTyped += group.charAt(1);
+        }
+        else if (mouseX <= (width/2-sizeOfInputArea/2) + (sizeOfInputArea/4)*3)
+        {
+          System.out.println("3");
+          currentTyped += group.charAt(2);
+        }
+        else
+        {
+          System.out.println("4");
+          currentTyped += group.charAt(3);
+        }
+      }
+      else
+      {
+        if (mouseX <= (width/2-sizeOfInputArea/2) + sizeOfInputArea/2)
+        {
+          System.out.println("1");
+          currentTyped += " ";
+        }
+        else
+        {
+          System.out.println("2");
+          StringBuilder sb = new StringBuilder(currentTyped);
+          sb.deleteCharAt(currentTyped.length() - 1);
+          currentTyped = sb.toString();
+        }
+        
+      }
+    }
+    
+    
+    
+  }
+  
+  
+  
+  
+  
+  
+  buttonState = 0;
+  
+  
+  
 }
 
 
@@ -248,6 +427,19 @@ void drawKeypad()
   scale(keypadScale);
   imageMode(CENTER); // Use corner mode for easier positioning
   image(T9keypad, 0,0, sizeOfInputArea, sizeOfInputArea);
+  popMatrix();
+}
+
+void drawSubKeypad(String imgName)
+{
+  
+  float subKeypadScale = DPIofYourDeviceScreen / 276.0;
+  subKeypad = loadImage(imgName);
+  pushMatrix();
+  translate(width/2, height/2);
+  scale(subKeypadScale);
+  imageMode(CENTER);
+  image(subKeypad, 0, 0);
   popMatrix();
 }
 
