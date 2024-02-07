@@ -91,7 +91,71 @@ void draw()
   drawKeypad();
   if (buttonState != 0)
   {
-    drawSubKeypad(sections[buttonState - 1] + ".png");
+    if (mouseX >= (width/2 - sizeOfInputArea/2) && mouseX <= (width/2 + sizeOfInputArea/2) && mouseY >= (height/2 - subButtonHeight/2) && mouseY <= (height/2 + subButtonHeight/2))
+    {
+      String group = sections[buttonState - 1];
+      if (group.length() == 3) 
+      {
+        if (mouseX <= (width/2-sizeOfInputArea/2) + sizeOfInputArea/3)
+        {
+          //System.out.println("1");
+          drawSubKeypad(group.charAt(0) + ".png");
+        }
+        else if (mouseX <= (width/2-sizeOfInputArea/2) + (sizeOfInputArea/3)*2)
+        {
+          //System.out.println("2");
+          drawSubKeypad(group.charAt(1) + ".png");
+        }
+        else
+        {
+          //System.out.println("3");
+          drawSubKeypad(group.charAt(2) + ".png");
+        }
+      } 
+      else if (group.length() == 4)
+      {
+        if (mouseX <= (width/2-sizeOfInputArea/2) + sizeOfInputArea/4)
+        {
+          //System.out.println("1");
+          drawSubKeypad(group.charAt(0) + ".png");
+        }
+        else if (mouseX <= (width/2-sizeOfInputArea/2) + (sizeOfInputArea/4)*2)
+        {
+          //System.out.println("2");
+          drawSubKeypad(group.charAt(1) + ".png");
+        }
+        else if (mouseX <= (width/2-sizeOfInputArea/2) + (sizeOfInputArea/4)*3)
+        {
+          //System.out.println("3");
+          drawSubKeypad(group.charAt(2) + ".png");
+        }
+        else
+        {
+          //System.out.println("4");
+          drawSubKeypad(group.charAt(3) + ".png");
+        }
+      }
+      else
+      {
+        if (mouseX <= (width/2-sizeOfInputArea/2) + sizeOfInputArea/2)
+        {
+          //System.out.println("1");
+          drawSubKeypad("space.png");
+        }
+        else
+        {
+          //System.out.println("2");
+          drawSubKeypad("delete.png");
+        }
+        
+      }
+    }
+    else
+    {
+      drawSubKeypad(sections[buttonState - 1] + ".png");
+    }
+    
+    
   }
   
   //fill(100);
@@ -241,7 +305,7 @@ void mousePressed()
    //System.out.println("CLICKED 2!"); 
    buttonState = 2;
   }
-  if (didMouseClick(width/2-sizeOfInputArea/ + buttonWidth*2 + buttonSpacing, height/2-sizeOfInputArea/2+entryHeight, buttonWidth, buttonHeight))
+  if (didMouseClick(width/2-sizeOfInputArea/2 + buttonWidth*2 + buttonSpacing, height/2-sizeOfInputArea/2+entryHeight, buttonWidth, buttonHeight))
   {
    //System.out.println(mouseX + " " + mouseY);
    //System.out.println("CLICKED 3!"); 
@@ -309,17 +373,17 @@ void mouseReleased() {
       {
         if (mouseX <= (width/2-sizeOfInputArea/2) + sizeOfInputArea/3)
         {
-          System.out.println("1");
+          //System.out.println("1");
           currentTyped += group.charAt(0);
         }
         else if (mouseX <= (width/2-sizeOfInputArea/2) + (sizeOfInputArea/3)*2)
         {
-          System.out.println("2");
+          //System.out.println("2");
           currentTyped += group.charAt(1);
         }
         else
         {
-          System.out.println("3");
+          //System.out.println("3");
           currentTyped += group.charAt(2);
         }
       } 
@@ -327,22 +391,22 @@ void mouseReleased() {
       {
         if (mouseX <= (width/2-sizeOfInputArea/2) + sizeOfInputArea/4)
         {
-          System.out.println("1");
+          //System.out.println("1");
           currentTyped += group.charAt(0);
         }
         else if (mouseX <= (width/2-sizeOfInputArea/2) + (sizeOfInputArea/4)*2)
         {
-          System.out.println("2");
+          //System.out.println("2");
           currentTyped += group.charAt(1);
         }
         else if (mouseX <= (width/2-sizeOfInputArea/2) + (sizeOfInputArea/4)*3)
         {
-          System.out.println("3");
+          //System.out.println("3");
           currentTyped += group.charAt(2);
         }
         else
         {
-          System.out.println("4");
+          //System.out.println("4");
           currentTyped += group.charAt(3);
         }
       }
@@ -350,12 +414,12 @@ void mouseReleased() {
       {
         if (mouseX <= (width/2-sizeOfInputArea/2) + sizeOfInputArea/2)
         {
-          System.out.println("1");
+          //System.out.println("1");
           currentTyped += " ";
         }
         else
         {
-          System.out.println("2");
+          //System.out.println("2");
           StringBuilder sb = new StringBuilder(currentTyped);
           sb.deleteCharAt(currentTyped.length() - 1);
           currentTyped = sb.toString();
