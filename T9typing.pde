@@ -1,6 +1,7 @@
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Random;
+import java.util.*;
 
 String[] phrases; //contains all of the phrases
 int totalTrialNum = 2; //the total number of phrases to be tested - set this low for testing. Might be ~10 for the real bakeoff!
@@ -16,6 +17,11 @@ String currentTyped = ""; //what the user has typed so far
 final int DPIofYourDeviceScreen = 295; //500 for debugging 295 for LG K31 you will need to look up the DPI or PPI of your device to make sure you get the right scale. Or play around with this value.
 final float sizeOfInputArea = DPIofYourDeviceScreen*1; //aka, 1.0 inches square!
 
+HashMap<String, Queue<String>> T9dictionary = new LinkedHashMap<String, Queue<String>>();
+String sequence = "";
+String old_sequence = "";
+int count = 0;
+String responseText = "";
 // MAY NEED TO TWEAK THESE
 
 final int displayTextChars = 20;
@@ -59,6 +65,7 @@ void setup()
   font = createFont("NotoSans-Regular.ttf", 14 * displayDensity);
   textFont(font); //set the font to Noto Sans 14 pt. Creating fonts is expensive, so make difference sizes once in setup, not draw
   noStroke(); //my code doesn't use any strokes
+  makeDictionary();
 }
 
 //You can modify anything in here. This is just a basic implementation.
@@ -91,7 +98,71 @@ void draw()
   drawKeypad();
   if (buttonState != 0)
   {
-    drawSubKeypad(sections[buttonState - 1] + ".png");
+    if (mouseX >= (width/2 - sizeOfInputArea/2) && mouseX <= (width/2 + sizeOfInputArea/2) && mouseY >= (height/2 - subButtonHeight/2) && mouseY <= (height/2 + subButtonHeight/2))
+    {
+      String group = sections[buttonState - 1];
+      if (group.length() == 3) 
+      {
+        //if (mouseX <= (width/2-sizeOfInputArea/2) + sizeOfInputArea/3)
+        //{
+        //  //System.out.println("1");
+        //  drawSubKeypad(group.charAt(0) + ".png");
+        //}
+        //else if (mouseX <= (width/2-sizeOfInputArea/2) + (sizeOfInputArea/3)*2)
+        //{
+        //  //System.out.println("2");
+        //  drawSubKeypad(group.charAt(1) + ".png");
+        //}
+        //else
+        //{
+        //  //System.out.println("3");
+        //  drawSubKeypad(group.charAt(2) + ".png");
+        //}
+      } 
+      else if (group.length() == 4)
+      {
+        //if (mouseX <= (width/2-sizeOfInputArea/2) + sizeOfInputArea/4)
+        //{
+        //  //System.out.println("1");
+        //  drawSubKeypad(group.charAt(0) + ".png");
+        //}
+        //else if (mouseX <= (width/2-sizeOfInputArea/2) + (sizeOfInputArea/4)*2)
+        //{
+        //  //System.out.println("2");
+        //  drawSubKeypad(group.charAt(1) + ".png");
+        //}
+        //else if (mouseX <= (width/2-sizeOfInputArea/2) + (sizeOfInputArea/4)*3)
+        //{
+        //  //System.out.println("3");
+        //  drawSubKeypad(group.charAt(2) + ".png");
+        //}
+        //else
+        //{
+        //  //System.out.println("4");
+        //  drawSubKeypad(group.charAt(3) + ".png");
+        //}
+      }
+      else
+      {
+        if (mouseX <= (width/2-sizeOfInputArea/2) + sizeOfInputArea/2)
+        {
+          //System.out.println("1");
+          drawSubKeypad("space.png");
+        }
+        else
+        {
+          //System.out.println("2");
+          drawSubKeypad("delete.png");
+        }
+        
+      }
+    }
+    else
+    {
+      //drawSubKeypad(sections[buttonState - 1] + ".png");
+    }
+    
+    
   }
   
   //fill(100);
@@ -183,7 +254,6 @@ void draw()
     
     textAlign(CENTER);
     //text("" + currentLetter, width/2, height/2-sizeOfInputArea/4); //draw current letter
-    textFont(font); //Reset font size
   }
 
 
@@ -227,7 +297,6 @@ void mousePressed()
   } */
   
   
-  
   if (didMouseClick(width/2-sizeOfInputArea/2 - buttonSpacing, height/2-sizeOfInputArea/2+entryHeight, buttonWidth, buttonHeight))
   {
    //System.out.println(mouseX + " " + mouseY);
@@ -241,7 +310,7 @@ void mousePressed()
    //System.out.println("CLICKED 2!"); 
    buttonState = 2;
   }
-  if (didMouseClick(width/2-sizeOfInputArea/ + buttonWidth*2 + buttonSpacing, height/2-sizeOfInputArea/2+entryHeight, buttonWidth, buttonHeight))
+  if (didMouseClick(width/2-sizeOfInputArea/2 + buttonWidth*2 + buttonSpacing, height/2-sizeOfInputArea/2+entryHeight, buttonWidth, buttonHeight))
   {
    //System.out.println(mouseX + " " + mouseY);
    //System.out.println("CLICKED 3!"); 
@@ -287,7 +356,25 @@ void mousePressed()
    //System.out.println("CLICKED 9!"); 
    buttonState = 9; 
   } 
+  if (didMouseClick(width/2-sizeOfInputArea/2 - buttonSpacing, height/2-sizeOfInputArea/2, buttonWidth, entryHeight)) {
+    //click on textbox, cycle through
+    if (!sequence.equals("")) {
+      count++;
+      String response = cycleWord(sequence, count); // Cycle the word based on 'sequence'
+      System.out.println(str(count)+ " th possible: " + response);
+      int lastSpaceIndex = currentTyped.lastIndexOf(" ");
+      if (lastSpaceIndex != -1) {
+        currentTyped = currentTyped.substring(0, lastSpaceIndex) + " " + response; // Replace the last word
+    } else {
+      currentTyped = response; // If no previous words, just set 'currentTyped' to the response
+    }
+    }
+  }
   
+  if (buttonState >= 2 && buttonState <= 9) {
+    sequence += str(buttonState); // Convert buttonState to string and append to sequence. button 1 is not used for inputting letters.
+  }
+  System.out.println("Current sequence: " + sequence);
   
 
   //You are allowed to have a next button outside the 1" area
@@ -305,68 +392,27 @@ void mouseReleased() {
     if (mouseX >= (width/2 - sizeOfInputArea/2) && mouseX <= (width/2 + sizeOfInputArea/2) && mouseY >= (height/2 - subButtonHeight/2) && mouseY <= (height/2 + subButtonHeight/2))
     {
       //System.out.println("A KEY HAS BEEN PRESSED!");
-      if (group.length() == 3) 
+      if (group.length() == 2) 
       {
-        if (mouseX <= (width/2-sizeOfInputArea/2) + sizeOfInputArea/3)
+      if (mouseX <= (width/2-sizeOfInputArea/2) + sizeOfInputArea/2)
         {
-          System.out.println("1");
-          currentTyped += group.charAt(0);
-        }
-        else if (mouseX <= (width/2-sizeOfInputArea/2) + (sizeOfInputArea/3)*2)
-        {
-          System.out.println("2");
-          currentTyped += group.charAt(1);
+          responseText = cycleWord(currentTyped, 0); // Or use another method to get the response based on the currentTyped sequence
+          currentTyped = "";
         }
         else
         {
-          System.out.println("3");
-          currentTyped += group.charAt(2);
+          if (currentTyped.length() > 0) {
+             currentTyped = currentTyped.substring(0, currentTyped.length() - 1);
+          }
         }
       } 
-      else if (group.length() == 4)
-      {
-        if (mouseX <= (width/2-sizeOfInputArea/2) + sizeOfInputArea/4)
-        {
-          System.out.println("1");
-          currentTyped += group.charAt(0);
-        }
-        else if (mouseX <= (width/2-sizeOfInputArea/2) + (sizeOfInputArea/4)*2)
-        {
-          System.out.println("2");
-          currentTyped += group.charAt(1);
-        }
-        else if (mouseX <= (width/2-sizeOfInputArea/2) + (sizeOfInputArea/4)*3)
-        {
-          System.out.println("3");
-          currentTyped += group.charAt(2);
-        }
-        else
-        {
-          System.out.println("4");
-          currentTyped += group.charAt(3);
-        }
-      }
-      else
-      {
-        if (mouseX <= (width/2-sizeOfInputArea/2) + sizeOfInputArea/2)
-        {
-          System.out.println("1");
-          currentTyped += " ";
-        }
-        else
-        {
-          System.out.println("2");
-          StringBuilder sb = new StringBuilder(currentTyped);
-          sb.deleteCharAt(currentTyped.length() - 1);
-          currentTyped = sb.toString();
-        }
-        
-      }
+      
+    }
     }
     
     
     
-  }
+  
   
   
   
@@ -493,6 +539,159 @@ void drawFinger()
 
   popMatrix();
 }
+
+//void makeDictionary() {
+//  String[] lines = loadStrings("dictionary.txt");
+//  for (String line : lines) {
+//    StringTokenizer st = new StringTokenizer(line);
+//    while (st.hasMoreTokens()) {
+//      String word = st.nextToken();
+//      String sequence = generateSeq(word.toLowerCase());
+//      insert(sequence, word.toLowerCase());
+//    }
+//  }
+//}
+String getResponse(String query) {
+  Queue<String> wordQueue = getWordQueue(query);
+  if (wordQueue != null && !wordQueue.isEmpty()) {
+    return wordQueue.peek().substring(0, Math.min(query.length(), wordQueue.peek().length()));
+  } else {
+    return ""; // Return an empty string if no words are found
+  }
+}
+
+String getResponseFull(String query) {
+  Queue<String> wordQueue = getWordQueue(query);
+  if (wordQueue != null && !wordQueue.isEmpty()) {
+    return wordQueue.toString();
+  } else {
+    return "[]"; // Return an empty queue representation if no words are found
+  }
+}
+
+Queue<String> getWordQueue(String query) {
+  if (T9dictionary.containsKey(query)) {
+    return T9dictionary.get(query);
+  } else {
+    for (String eachKey : T9dictionary.keySet()) {
+      if (eachKey.startsWith(query)) {
+        println("in loop: " + eachKey);
+        return T9dictionary.get(eachKey);
+      }
+    }
+  }
+  return new LinkedList<String>(); // Return an empty queue if no matching sequence is found
+}
+
+String cycleWord(String query, int count) {
+  String allOptions = getResponseFull(query);
+  allOptions = allOptions.substring(1, allOptions.length() - 1); // Remove brackets
+
+  String[] options = allOptions.split(",");
+  for (int i = 0; i < options.length; i++) {
+    options[i] = options[i].trim(); // Remove leading and trailing spaces
+  }
+
+  if (options.length == 0 || options[0].isEmpty()) {
+    return ""; // Return an empty string if no options are available
+  }
+
+  int index = count % options.length;
+  return options[index];
+}
+
+void makeDictionary() {
+  // Specify the path to your dictionary file
+  String dictionaryPath = "dictionary.txt"; // Update this path
+  String[] lines = loadStrings(dictionaryPath);
+  
+  println("Starting to make the dictionary...");
+  int wordCount = 0; // Keep track of how many words are added
+  
+  for (String line : lines) {
+    String[] words = line.split("\\s+"); // Assuming words are separated by whitespace
+    for (String word : words) {
+      if (!word.isEmpty()) { // Check to ensure the word is not empty
+        String sequence = generateSeq(word.toLowerCase());
+        insert(sequence, word.toLowerCase());
+        wordCount++;
+      }
+    }
+  }
+  
+  println("Dictionary made with " + wordCount + " words.");
+  println("Sample content from the dictionary:");
+  
+  // Print a sample from the dictionary to verify its contents
+  int sampleCount = 0;
+  for (Map.Entry<String, Queue<String>> entry : T9dictionary.entrySet()) {
+    println("Key (Digit Sequence): " + entry.getKey() + " - Words: " + entry.getValue());
+    sampleCount++;
+    if (sampleCount == 5) break; // Limit the sample output to 5 entries
+  }
+}
+
+
+void insert(String sequence, String word) {
+  if (T9dictionary.containsKey(sequence)) {
+    Queue<String> wordQueue = T9dictionary.get(sequence);
+    if (wordQueue.contains(word)) {
+      String toUpdate = removeWord(wordQueue, word);
+      wordQueue.add(toUpdate);
+    } else {
+      String ne = word;
+      wordQueue.add(ne);
+    }
+  } else {
+    Queue<String> wordQueue = new PriorityQueue<String>(new Comparator<String>() {
+  @Override
+  public int compare(String o1, String o2) {
+    return o1.compareTo(o2);
+  }
+});
+    wordQueue.add(word);
+    T9dictionary.put(sequence, wordQueue);
+  }
+}
+
+String removeWord(Queue<String> wordQueue, String word) {
+  // Iterate through the Queue to find and remove the specified word
+  Iterator<String> iterator = wordQueue.iterator();
+  while (iterator.hasNext()) {
+    String eachWordIn = iterator.next();
+    if (eachWordIn.equals(word)) {
+      iterator.remove(); // Use Iterator's remove method to avoid ConcurrentModificationException
+      return eachWordIn;
+    }
+  }
+  return null; // Return null if the word was not found
+}
+
+String generateSeq(String word) {
+  String sequence = "";
+  for (int i = 0; i < word.length(); i++) {
+    sequence += getDigit(word.charAt(i));
+  }
+  return sequence;
+}
+
+char getDigit(char alphabet) {
+  if (alphabet >= '0' && alphabet <= '9') {
+    return alphabet;
+  }
+  switch (alphabet) {
+    case 'a': case 'b': case 'c': return '2';
+    case 'd': case 'e': case 'f': return '3';
+    case 'g': case 'h': case 'i': return '4';
+    case 'j': case 'k': case 'l': return '5';
+    case 'm': case 'n': case 'o': return '6';
+    case 'p': case 'q': case 'r': case 's': return '7';
+    case 't': case 'u': case 'v': return '8';
+    case 'w': case 'x': case 'y': case 'z': return '9';
+    default: return '1';  // Assuming '1' is used for characters that do not map to any digit
+  }
+}
+
 
 
 //=========SHOULD NOT NEED TO TOUCH THIS METHOD AT ALL!==============
