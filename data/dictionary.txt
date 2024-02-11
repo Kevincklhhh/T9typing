@@ -438,6 +438,7 @@ dry
 duck
 due
 during
+e
 each
 ear
 early
@@ -605,6 +606,7 @@ full
 fully
 fun
 futile
+g
 gallery
 gamblers
 game
@@ -658,6 +660,7 @@ guess
 guide
 guidelines
 gun
+h
 had
 hair
 half
@@ -757,6 +760,7 @@ irregular
 is
 island
 it
+j
 jacket
 jammed
 jedi
@@ -773,6 +777,7 @@ jumped
 jumping
 just
 justice
+k
 keep
 keeps
 kept
@@ -788,6 +793,7 @@ knees
 knew
 knocking
 know
+l
 labour
 lady
 lagoon
@@ -866,6 +872,7 @@ low
 luckily
 lunch
 lydia
+m
 machine
 machinery
 made
@@ -956,6 +963,7 @@ music
 must
 my
 mystery
+n
 name
 nasty
 nation
@@ -996,6 +1004,7 @@ now
 number
 numeral
 nutty
+o
 obey
 object
 objective
@@ -1045,6 +1054,7 @@ overdrawn
 own
 owned
 oxygen
+p
 page
 paid
 paint
@@ -1178,6 +1188,7 @@ pumping
 punishment
 push
 put
+q
 quacks
 quakes
 quart
@@ -1192,6 +1203,7 @@ quit
 quite
 quota
 quotient
+r
 race
 radio
 raged
@@ -1278,6 +1290,7 @@ rules
 run
 running
 runs
+s
 sad
 saddles
 safe
@@ -1520,6 +1533,7 @@ syllabus
 symbol
 sympathy
 system
+t
 table
 tabletop
 tail
@@ -1631,6 +1645,7 @@ turtleneck
 twenty
 two
 type
+u
 unacceptable
 unavailable
 under
@@ -1650,6 +1665,7 @@ use
 user
 usual
 usually
+v
 valid
 validated
 valium
@@ -1671,6 +1687,7 @@ voice
 vote
 voters
 vowel
+w
 wait
 walk
 wall
@@ -1758,6 +1775,8 @@ writing
 written
 wrong
 wrote
+x
+y
 yap
 yard
 year
@@ -1768,5 +1787,6 @@ yet
 you
 young
 your
+z
 zero
 zoom

@@ -399,17 +399,23 @@ void mousePressed()
   if (didMouseClick(width/2-sizeOfInputArea/2 - buttonSpacing + (sizeOfInputArea - deleteWidth), height/2-sizeOfInputArea/2 - 4, deleteWidth, entryHeight))
   {
     System.out.println("delete");
-    if (!sequence.equals("")){
+    int lastSpaceIndex = currentTyped.lastIndexOf(" ");
+    if (!sequence.equals("")){//entering sequence
        sequence = sequence.substring(0, sequence.length() - 1);
        response = cycleWord(sequence, count);
-        int lastSpaceIndex = currentTyped.lastIndexOf(" ");
           if (lastSpaceIndex != -1) {
             currentTyped = currentTyped.substring(0, lastSpaceIndex) + " " + response; // Replace the last word
         } else {
           currentTyped = response; // If no previous words, just set 'currentTyped' to the response
         }
-    }else if (currentTyped.length() > 0) {
-       currentTyped = currentTyped.substring(0, currentTyped.length() - 1);
+    }else if (currentTyped.length() > 0) {//no sequence enterance, delete whole last word
+      if (lastSpaceIndex != -1) {
+    // If there's a space, remove everything after the last space
+    currentTyped = currentTyped.substring(0, lastSpaceIndex);
+} else {
+    // If there's no space, clear 'currentTyped' as it contains only one word
+    currentTyped = "";
+}
     }
   }
   
