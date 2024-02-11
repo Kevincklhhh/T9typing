@@ -266,6 +266,10 @@ void draw()
       text(currentTyped.substring(currentTyped.length()-displayTextChars) + "|", width/2-sizeOfInputArea/2, height/2-sizeOfInputArea/2, sizeOfInputArea, sizeOfInputArea/4); //draw last characters
     }
     
+    textFont(font, (6 * DPIofYourDeviceScreen) / 144);
+    text(sequence, width/2-sizeOfInputArea/2, height/2-sizeOfInputArea/2 + entryHeight/2 + 5, sizeOfInputArea, sizeOfInputArea/4);
+    
+    textFont(font, (6 * DPIofYourDeviceScreen) / 72);
     textAlign(CENTER);
     //text("" + currentLetter, width/2, height/2-sizeOfInputArea/4); //draw current letter
   }
@@ -630,7 +634,7 @@ Queue<String> getWordQueue(String query) {
     }
     return wordQueue;
   }
-  return new LinkedList<String>(); // Return an empty queue if no matching sequence is found
+  //return new LinkedList<String>(); // Return an empty queue if no matching sequence is found
 }
 
 String cycleWord(String query, int count) {
