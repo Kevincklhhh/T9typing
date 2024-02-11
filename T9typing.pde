@@ -24,12 +24,13 @@ String old_sequence = "";
 int count = 0;
 // MAY NEED TO TWEAK THESE
 
-final int displayTextChars = 20;
+final int displayTextChars = 17;
 final int entryHeight = 50;
 final int subButtonHeight = 100;
 final int buttonSpacing = 6;
 final int buttonWidth = (int)sizeOfInputArea / 3;
 final int buttonHeight = ((int)sizeOfInputArea - entryHeight) / 3+3;
+final int deleteWidth = 45;
 
 
 String[] sections = {"space-delete", "abc", "def", "ghi", "jkl", "mnop", "qrs", "tuv", "wxyz"};
@@ -51,7 +52,7 @@ char currentLetter = 'a';
 void setup()
 {
   //noCursor();
-  T9keypad = loadImage("T9_Layout.png");
+  T9keypad = loadImage("T9_Layout_Autocomplete.png");
   watch = loadImage("watchhand3smaller.png");
   //finger = loadImage("pngeggSmaller.png"); //not using this
   phrases = loadStrings("phrases2.txt"); //load the phrase set into memory
@@ -237,6 +238,8 @@ void draw()
     rect(width/2-sizeOfInputArea/2 + buttonWidth, height/2-sizeOfInputArea/2+entryHeight+buttonHeight*2, buttonWidth, buttonHeight);
     rect(width/2-sizeOfInputArea/2 + buttonWidth*2, height/2-sizeOfInputArea/2+entryHeight+buttonHeight*2, buttonWidth, buttonHeight); */
     
+    //rect(width/2-sizeOfInputArea/2 - buttonSpacing, height/2-sizeOfInputArea/2 - 4, sizeOfInputArea - 45, entryHeight);
+    
     
     fill(255);
     text("NEXT > ", width-150, height-150); //draw next label
@@ -260,7 +263,7 @@ void draw()
     }
     else
     {
-      text(currentTyped.substring(currentTyped.length()-20) + "|", width/2-sizeOfInputArea/2, height/2-sizeOfInputArea/2, sizeOfInputArea, sizeOfInputArea/4); //draw last 20 characters
+      text(currentTyped.substring(currentTyped.length()-displayTextChars) + "|", width/2-sizeOfInputArea/2, height/2-sizeOfInputArea/2, sizeOfInputArea, sizeOfInputArea/4); //draw last characters
     }
     
     textAlign(CENTER);
@@ -312,8 +315,15 @@ void mousePressed()
   {
    //System.out.println(mouseX + " " + mouseY);
    //System.out.println("CLICKED 1!"); 
-   
-   buttonState = 1;
+   if (!sequence.equals("")){
+      System.out.println("submit");
+      sequence = "";
+      response = ""; 
+      currentTyped += " ";
+    }else{
+      currentTyped += " ";
+    }
+   //buttonState = 1;
   }
   if (didMouseClick(width/2-sizeOfInputArea/2 + buttonWidth, height/2-sizeOfInputArea/2+entryHeight, buttonWidth, buttonHeight))
   {
@@ -367,7 +377,7 @@ void mousePressed()
    //System.out.println("CLICKED 9!"); 
    buttonState = 9; 
   } 
-  if (didMouseClick(width/2-sizeOfInputArea/2 - buttonSpacing, height/2-sizeOfInputArea/2, buttonWidth, entryHeight)) {
+  if (didMouseClick(width/2-sizeOfInputArea/2 - buttonSpacing, height/2-sizeOfInputArea/2 - 4, sizeOfInputArea - deleteWidth, entryHeight)) {
     //click on textbox, cycle through
     if (!sequence.equals("")) {
       count++;
@@ -379,6 +389,23 @@ void mousePressed()
     } else {
       currentTyped = response; // If no previous words, just set 'currentTyped' to the response
     }
+    }
+  }
+  
+  if (didMouseClick(width/2-sizeOfInputArea/2 - buttonSpacing + (sizeOfInputArea - deleteWidth), height/2-sizeOfInputArea/2 - 4, deleteWidth, entryHeight))
+  {
+    System.out.println("delete");
+    if (!sequence.equals("")){
+       sequence = sequence.substring(0, sequence.length() - 1);
+       response = cycleWord(sequence, count);
+        int lastSpaceIndex = currentTyped.lastIndexOf(" ");
+          if (lastSpaceIndex != -1) {
+            currentTyped = currentTyped.substring(0, lastSpaceIndex) + " " + response; // Replace the last word
+        } else {
+          currentTyped = response; // If no previous words, just set 'currentTyped' to the response
+        }
+    }else if (currentTyped.length() > 0) {
+       currentTyped = currentTyped.substring(0, currentTyped.length() - 1);
     }
   }
   
@@ -403,10 +430,11 @@ void mousePressed()
 }
 
 void mouseReleased() {
-  if (buttonState == 1){
+  /*if (buttonState == 1){
     if (mouseX >= (width/2 - sizeOfInputArea/2) && mouseX <= (width/2 + sizeOfInputArea/2) && mouseY >= (height/2 - subButtonHeight/2) && mouseY <= (height/2 + subButtonHeight/2))
     {
       //System.out.println("A KEY HAS BEEN PRESSED!");
+      //Submit
       if (mouseX <= (width/2-sizeOfInputArea/2) + sizeOfInputArea/2)
         {
           if (!sequence.equals("")){
@@ -420,6 +448,7 @@ void mouseReleased() {
         }
         else
         {//deletion of currenttyped or deletion of sequence
+        //Delete
           System.out.println("delete");
           if (!sequence.equals("")){
              sequence = sequence.substring(0, sequence.length() - 1);
@@ -434,8 +463,8 @@ void mouseReleased() {
              currentTyped = currentTyped.substring(0, currentTyped.length() - 1);
           }
       } 
-    }
-}
+    } 
+}*/
   buttonState = 0;
 }
 
