@@ -19,6 +19,7 @@ final float sizeOfInputArea = DPIofYourDeviceScreen*1; //aka, 1.0 inches square!
 
 HashMap<String, Queue<String>> T9dictionary = new LinkedHashMap<String, Queue<String>>();
 String sequence = "";
+String response = "";
 String old_sequence = "";
 int count = 0;
 String responseText = "";
@@ -360,7 +361,7 @@ void mousePressed()
     //click on textbox, cycle through
     if (!sequence.equals("")) {
       count++;
-      String response = cycleWord(sequence, count); // Cycle the word based on 'sequence'
+      response = cycleWord(sequence, count); // Cycle the word based on 'sequence'
       System.out.println(str(count)+ " th possible: " + response);
       int lastSpaceIndex = currentTyped.lastIndexOf(" ");
       if (lastSpaceIndex != -1) {
@@ -385,44 +386,32 @@ void mousePressed()
 }
 
 void mouseReleased() {
-  if (buttonState != 0)
-  {
-    String group = sections[buttonState - 1];
-    
+  if (buttonState == 1){
     if (mouseX >= (width/2 - sizeOfInputArea/2) && mouseX <= (width/2 + sizeOfInputArea/2) && mouseY >= (height/2 - subButtonHeight/2) && mouseY <= (height/2 + subButtonHeight/2))
     {
       //System.out.println("A KEY HAS BEEN PRESSED!");
-      if (group.length() == 2) 
-      {
       if (mouseX <= (width/2-sizeOfInputArea/2) + sizeOfInputArea/2)
         {
-          responseText = cycleWord(currentTyped, 0); // Or use another method to get the response based on the currentTyped sequence
-          currentTyped = "";
-        }
-        else
-        {
-          if (currentTyped.length() > 0) {
-             currentTyped = currentTyped.substring(0, currentTyped.length() - 1);
+          if (!sequence.equals("")){
+            currentTyped += " ";
+          }else{
+            System.out.println("submit");
+            responseText = cycleWord(currentTyped, 0); 
+            currentTyped = "";
           }
         }
+        else
+        {//deletion of currenttyped or deletion of sequence
+          System.out.println("delete");
+          if (!sequence.equals("")){
+             sequence = sequence.substring(0, sequence.length() - 1);
+          }else if (currentTyped.length() > 0) {
+             currentTyped = currentTyped.substring(0, currentTyped.length() - 1);
+          }
       } 
-      
     }
-    }
-    
-    
-    
-  
-  
-  
-  
-  
-  
-  
+}
   buttonState = 0;
-  
-  
-  
 }
 
 
