@@ -497,6 +497,9 @@ void nextTrial()
   lastTime = millis(); //record the time of when this trial ended
   currentTyped = ""; //clear what is currently typed preparing for next trial
   currentPhrase = phrases[currTrialNum]; // load the next phrase!
+  
+  sequence = "";
+  response = ""; 
   //currentPhrase = "abc"; // uncomment this to override the test phrase (useful for debugging)
 }
 
