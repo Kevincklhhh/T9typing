@@ -619,12 +619,16 @@ Queue<String> getWordQueue(String query) {
   if (T9dictionary.containsKey(query)) {
     return T9dictionary.get(query);
   } else {
+    //creat a new queue
+    Queue<String> wordQueue = new PriorityQueue<String>();
     for (String eachKey : T9dictionary.keySet()) {
       if (eachKey.startsWith(query)) {
         println("in loop: " + eachKey);
-        return T9dictionary.get(eachKey);
+        wordQueue.addAll(T9dictionary.get(eachKey));
+        // return T9dictionary.get(eachKey);
       }
     }
+    return wordQueue;
   }
   return new LinkedList<String>(); // Return an empty queue if no matching sequence is found
 }
