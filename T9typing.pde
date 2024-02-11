@@ -22,7 +22,6 @@ String sequence = "";
 String response = "";
 String old_sequence = "";
 int count = 0;
-String responseText = "";
 // MAY NEED TO TWEAK THESE
 
 final int displayTextChars = 20;
@@ -67,6 +66,17 @@ void setup()
   textFont(font); //set the font to Noto Sans 14 pt. Creating fonts is expensive, so make difference sizes once in setup, not draw
   noStroke(); //my code doesn't use any strokes
   makeDictionary();
+  String[] testQueries = {"78433"};
+  int[] cycleCounts = {0, 1, 2, 3, 4, 5};
+  
+  // Run tests
+  for (String query : testQueries) {
+    for (int count : cycleCounts) {
+      String result = cycleWord(query, count);
+      println("Query: " + query + ", Count: " + count + ", Result: " + result);
+    }
+    println("-----"); // Separator for readability
+  }
 }
 
 //You can modify anything in here. This is just a basic implementation.
@@ -374,6 +384,13 @@ void mousePressed()
   
   if (buttonState >= 2 && buttonState <= 9) {
     sequence += str(buttonState); // Convert buttonState to string and append to sequence. button 1 is not used for inputting letters.
+    response = cycleWord(sequence, count);
+    int lastSpaceIndex = currentTyped.lastIndexOf(" ");
+      if (lastSpaceIndex != -1) {
+        currentTyped = currentTyped.substring(0, lastSpaceIndex) + " " + response; // Replace the last word
+    } else {
+      currentTyped = response; // If no previous words, just set 'currentTyped' to the response
+    }
   }
   System.out.println("Current sequence: " + sequence);
   
@@ -393,11 +410,12 @@ void mouseReleased() {
       if (mouseX <= (width/2-sizeOfInputArea/2) + sizeOfInputArea/2)
         {
           if (!sequence.equals("")){
+            System.out.println("submit");
+            sequence = "";
+            response = ""; 
             currentTyped += " ";
           }else{
-            System.out.println("submit");
-            responseText = cycleWord(currentTyped, 0); 
-            currentTyped = "";
+            currentTyped += " ";
           }
         }
         else
@@ -405,6 +423,13 @@ void mouseReleased() {
           System.out.println("delete");
           if (!sequence.equals("")){
              sequence = sequence.substring(0, sequence.length() - 1);
+             response = cycleWord(sequence, count);
+              int lastSpaceIndex = currentTyped.lastIndexOf(" ");
+                if (lastSpaceIndex != -1) {
+                  currentTyped = currentTyped.substring(0, lastSpaceIndex) + " " + response; // Replace the last word
+              } else {
+                currentTyped = response; // If no previous words, just set 'currentTyped' to the response
+              }
           }else if (currentTyped.length() > 0) {
              currentTyped = currentTyped.substring(0, currentTyped.length() - 1);
           }
@@ -608,16 +633,16 @@ void makeDictionary() {
     }
   }
   
-  println("Dictionary made with " + wordCount + " words.");
-  println("Sample content from the dictionary:");
+  //println("Dictionary made with " + wordCount + " words.");
+  //println("Sample content from the dictionary:");
   
-  // Print a sample from the dictionary to verify its contents
-  int sampleCount = 0;
-  for (Map.Entry<String, Queue<String>> entry : T9dictionary.entrySet()) {
-    println("Key (Digit Sequence): " + entry.getKey() + " - Words: " + entry.getValue());
-    sampleCount++;
-    if (sampleCount == 5) break; // Limit the sample output to 5 entries
-  }
+  //// Print a sample from the dictionary to verify its contents
+  //int sampleCount = 0;
+  //for (Map.Entry<String, Queue<String>> entry : T9dictionary.entrySet()) {
+  //  println("Key (Digit Sequence): " + entry.getKey() + " - Words: " + entry.getValue());
+  //  sampleCount++;
+  //  if (sampleCount == 10) break; // Limit the sample output to 5 entries
+  //}
 }
 
 
@@ -673,8 +698,8 @@ char getDigit(char alphabet) {
     case 'd': case 'e': case 'f': return '3';
     case 'g': case 'h': case 'i': return '4';
     case 'j': case 'k': case 'l': return '5';
-    case 'm': case 'n': case 'o': return '6';
-    case 'p': case 'q': case 'r': case 's': return '7';
+    case 'm': case 'n': case 'o': case 'p' : return '6';
+    case 'q': case 'r': case 's': return '7';
     case 't': case 'u': case 'v': return '8';
     case 'w': case 'x': case 'y': case 'z': return '9';
     default: return '1';  // Assuming '1' is used for characters that do not map to any digit
